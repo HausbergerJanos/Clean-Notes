@@ -45,6 +45,10 @@ android {
         jvmTarget = Java.java_version
     }
 
+    sourceSets {
+        test.resources.srcDirs += "src/test/res"
+    }
+
     // remove need for apply plugin: 'de.mannodermaus.android-junit5'
     testOptions {
         unitTests.all {
@@ -89,4 +93,5 @@ dependencies {
     testImplementation TestDependencies.jupiter_params
     testImplementation TestDependencies.junit4
     testRuntimeOnly TestDependencies.jupiter_engine
+    testImplementation Dependencies.retrofit_gson
 }

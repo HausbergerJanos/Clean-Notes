@@ -19,21 +19,21 @@ constructor(
 ): NoteCacheDataSource {
 
     override suspend fun insertNote(note: Note): Long {
-        if(note.id.equals(FORCE_NEW_NOTE_EXCEPTION)){
+        if(note.id == FORCE_NEW_NOTE_EXCEPTION){
             throw Exception("Something went wrong inserting the note.")
         }
-        if(note.id.equals(FORCE_GENERAL_FAILURE)){
+        if(note.id == FORCE_GENERAL_FAILURE){
             return -1 // fail
         }
-        notesData.put(note.id, note)
+        notesData[note.id] = note
         return 1 // success
     }
 
     override suspend fun deleteNote(primaryKey: String): Int {
-        if(primaryKey.equals(FORCE_DELETE_NOTE_EXCEPTION)){
+        if(primaryKey == FORCE_DELETE_NOTE_EXCEPTION){
             throw Exception("Something went wrong deleting the note.")
         }
-        else if(primaryKey.equals(FORCE_DELETES_NOTE_EXCEPTION)){
+        else if(primaryKey == FORCE_DELETES_NOTE_EXCEPTION){
             throw Exception("Something went wrong deleting the note.")
         }
         return notesData.remove(primaryKey)?.let {
@@ -80,7 +80,7 @@ constructor(
         String,
         page: Int
     ): List<Note> {
-        if(query.equals(FORCE_SEARCH_NOTES_EXCEPTION)){
+        if(query == FORCE_SEARCH_NOTES_EXCEPTION){
             throw Exception("Something went searching the cache for notes.")
         }
         val results: ArrayList<Note> = ArrayList()
