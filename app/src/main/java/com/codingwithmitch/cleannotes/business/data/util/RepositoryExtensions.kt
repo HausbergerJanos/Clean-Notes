@@ -4,6 +4,7 @@ import com.codingwithmitch.cleannotes.business.data.cache.CacheConstants.CACHE_T
 import com.codingwithmitch.cleannotes.business.data.cache.CacheErrors.CACHE_ERROR_TIMEOUT
 import com.codingwithmitch.cleannotes.business.data.cache.CacheErrors.CACHE_ERROR_UNKNOWN
 import com.codingwithmitch.cleannotes.business.data.cache.CacheResult
+import com.codingwithmitch.cleannotes.business.data.cache.CacheResult.*
 import com.codingwithmitch.cleannotes.business.data.network.ApiResult
 import com.codingwithmitch.cleannotes.business.data.network.NetworkConstants.NETWORK_TIMEOUT
 import com.codingwithmitch.cleannotes.business.data.network.NetworkErrors.NETWORK_ERROR_TIMEOUT
@@ -26,7 +27,7 @@ suspend fun <T> safeApiCall(
     return withContext(dispatcher) {
         try {
             // throws TimeoutCancellationException
-            withTimeout(NETWORK_TIMEOUT){
+            withTimeout(NETWORK_TIMEOUT) {
                 ApiResult.Success(apiCall.invoke())
             }
         } catch (throwable: Throwable) {
@@ -65,18 +66,18 @@ suspend fun <T> safeCacheCall(
     return withContext(dispatcher) {
         try {
             // throws TimeoutCancellationException
-            withTimeout(CACHE_TIMEOUT){
-                CacheResult.Success(cacheCall.invoke())
+            withTimeout(CACHE_TIMEOUT) {
+                Success(cacheCall.invoke())
             }
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
             when (throwable) {
 
                 is TimeoutCancellationException -> {
-                    CacheResult.GenericError(CACHE_ERROR_TIMEOUT)
+                    GenericError(CACHE_ERROR_TIMEOUT)
                 }
                 else -> {
-                    CacheResult.GenericError(CACHE_ERROR_UNKNOWN)
+                    GenericError(CACHE_ERROR_UNKNOWN)
                 }
             }
         }

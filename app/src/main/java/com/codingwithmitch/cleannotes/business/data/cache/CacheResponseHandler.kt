@@ -1,6 +1,7 @@
 package com.codingwithmitch.cleannotes.business.data.cache
 
 import com.codingwithmitch.cleannotes.business.data.cache.CacheErrors.CACHE_DATA_NULL
+import com.codingwithmitch.cleannotes.business.data.cache.CacheResult.*
 import com.codingwithmitch.cleannotes.business.domain.state.*
 
 abstract class CacheResponseHandler<ViewState, Data>(
@@ -11,7 +12,7 @@ abstract class CacheResponseHandler<ViewState, Data>(
 
         return when (response) {
 
-            is CacheResult.GenericError -> {
+            is GenericError -> {
                 DataState.error(
                     response = Response(
                         message = "${stateEvent?.errorInfo()}\n\nReason: ${response.errorMessage}",
@@ -22,7 +23,7 @@ abstract class CacheResponseHandler<ViewState, Data>(
                 )
             }
 
-            is CacheResult.Success -> {
+            is Success -> {
                 if (response.value == null) {
                     DataState.error(
                         response = Response(
