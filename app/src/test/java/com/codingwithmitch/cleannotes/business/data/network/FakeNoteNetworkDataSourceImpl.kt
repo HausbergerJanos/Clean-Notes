@@ -18,12 +18,12 @@ constructor(
     }
 
     override suspend fun insertDeletedNote(note: Note) {
-        deletedNotesData.put(note.id, note)
+        deletedNotesData[note.id] = note
     }
 
     override suspend fun insertDeletedNotes(notes: List<Note>) {
         for(note in notes){
-            deletedNotesData.put(note.id, note)
+            deletedNotesData[note.id] = note
         }
     }
 
@@ -49,7 +49,7 @@ constructor(
 
     override suspend fun insertOrUpdateNotes(notes: List<Note>) {
         for(note in notes){
-            notesData.put(note.id, note)
+            notesData[note.id] = note
         }
     }
 }
