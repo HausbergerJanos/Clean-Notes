@@ -55,7 +55,7 @@ constructor(
         newTitle: String,
         newBody: String?
     ): Int {
-        if (primaryKey.equals(FORCE_UPDATE_NOTE_EXCEPTION)) {
+        if (primaryKey == FORCE_UPDATE_NOTE_EXCEPTION) {
             throw Exception("Something went wrong updating the note.")
         }
         val updatedNote = Note(
@@ -63,10 +63,10 @@ constructor(
             title = newTitle,
             body = newBody ?: "",
             updatedAt = dateUtil.getCurrentTimestamp(),
-            createdAt = notesData.get(primaryKey)?.createdAt ?: dateUtil.getCurrentTimestamp()
+            createdAt = notesData[primaryKey]?.createdAt ?: dateUtil.getCurrentTimestamp()
         )
-        return notesData.get(primaryKey)?.let {
-            notesData.put(primaryKey, updatedNote)
+        return notesData[primaryKey]?.let {
+            notesData[primaryKey] = updatedNote
             1 // success
         } ?: -1 // nothing to update
     }
