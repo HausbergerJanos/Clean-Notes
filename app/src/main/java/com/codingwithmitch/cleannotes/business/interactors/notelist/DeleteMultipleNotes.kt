@@ -31,9 +31,8 @@ class DeleteMultipleNotes(
         notes: List<Note>,
         stateEvent: StateEvent
     ): Flow<DataState<NoteListViewState>?> = flow {
-        // notes that were successfully deleted
-        val successfulDeletes: ArrayList<Note> = ArrayList()
 
+        val successfulDeletes: ArrayList<Note> = ArrayList() // notes that were successfully deleted
         for (note in notes) {
             val cacheResult = safeCacheCall(IO) {
                 noteCacheDataSource.deleteNote(note.id)
@@ -54,50 +53,53 @@ class DeleteMultipleNotes(
             }.getResult()
 
             // check for random errors
-            if (response?.stateMessage?.response?.message?.contains(stateEvent.errorInfo()) == true) {
+            if (response?.stateMessage?.response?.message
+                    ?.contains(stateEvent.errorInfo()) == true
+            ) {
                 onDeleteError = true
             }
 
-            if (onDeleteError) {
-                emit(
-                    DataState.data<NoteListViewState>(
-                        response = Response(
-                            message = DELETE_NOTES_ERRORS,
-                            uiComponentType = UIComponentType.Dialog(),
-                            messageType = MessageType.Success()
-                        ),
-                        data = null,
-                        stateEvent = stateEvent
-                    )
+        }
+
+        if (onDeleteError) {
+            emit(
+                DataState.data<NoteListViewState>(
+                    response = Response(
+                        message = DELETE_NOTES_ERRORS,
+                        uiComponentType = UIComponentType.Dialog(),
+                        messageType = MessageType.Success()
+                    ),
+                    data = null,
+                    stateEvent = stateEvent
                 )
-            } else {
-                emit(
-                    DataState.data<NoteListViewState>(
-                        response = Response(
-                            message = DELETE_NOTES_SUCCESS,
-                            uiComponentType = UIComponentType.Toast(),
-                            messageType = MessageType.Success()
-                        ),
-                        data = null,
-                        stateEvent = stateEvent
-                    )
+            )
+        } else {
+            emit(
+                DataState.data<NoteListViewState>(
+                    response = Response(
+                        message = DELETE_NOTES_SUCCESS,
+                        uiComponentType = UIComponentType.Toast(),
+                        messageType = MessageType.Success()
+                    ),
+                    data = null,
+                    stateEvent = stateEvent
                 )
-            }
+            )
         }
 
         updateNetwork(successfulDeletes)
     }
 
-    private suspend fun updateNetwork(successfulDeletes: ArrayList<Note>){
-        for (note in successfulDeletes){
+    private suspend fun updateNetwork(successfulDeletes: ArrayList<Note>) {
+        for (note in successfulDeletes) {
 
             // delete from "notes" node
-            safeApiCall(IO){
+            safeApiCall(IO) {
                 noteNetworkDataSource.deleteNote(note.id)
             }
 
             // insert into "deletes" node
-            safeApiCall(IO){
+            safeApiCall(IO) {
                 noteNetworkDataSource.insertDeletedNote(note)
             }
         }
