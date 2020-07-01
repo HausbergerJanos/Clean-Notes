@@ -5,7 +5,7 @@ import com.codingwithmitch.cleannotes.business.data.network.abstraction.NoteNetw
 import com.codingwithmitch.cleannotes.business.domain.model.Note
 import com.codingwithmitch.cleannotes.business.domain.model.NoteFactory
 import com.codingwithmitch.cleannotes.di.DependencyContainer
-import com.codingwithmitch.cleannotes.framework.datasource.database.ORDER_BY_ASC_DATE_UPDATED
+import com.codingwithmitch.cleannotes.framework.datasource.cache.database.ORDER_BY_ASC_DATE_UPDATED
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
