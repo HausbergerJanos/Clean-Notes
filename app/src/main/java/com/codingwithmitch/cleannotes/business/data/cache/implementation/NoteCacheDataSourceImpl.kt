@@ -33,6 +33,10 @@ constructor(
         return noteDaoService.updateNote(primaryKey, newTitle, newBody)
     }
 
+    override suspend fun getAllNotes(): List<Note> {
+        return noteDaoService.getAllNotes()
+    }
+
     override suspend fun searchNotes(
         query: String,
         filterAndOrder: String,
