@@ -112,7 +112,7 @@ constructor(
         val results = LongArray(notes.size)
         for ((index, note) in notes.withIndex()) {
             results[index] = 1
-            notesData.put(note.id, note)
+            notesData[note.id] = note
         }
         return results
     }
