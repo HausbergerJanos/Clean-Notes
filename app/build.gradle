@@ -77,9 +77,12 @@ dependencies {
     implementation Dependencies.kotlin_coroutines_play_services
     implementation Dependencies.retrofit
     implementation Dependencies.retrofit_gson
+    implementation Dependencies.room_ktx
+    implementation Dependencies.room_runtime
 
     // Annotation Processing
     kapt AnnotationProcessing.dagger_compiler
+    kapt AnnotationProcessing.room_compiler
 
     // Support
     implementation SupportDependencies.appcompat
