@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "160504238952",
+    "firebase_url": "https://clean-notes-f25ff.firebaseio.com",
+    "project_id": "clean-notes-f25ff",
+    "storage_bucket": "clean-notes-f25ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160504238952:android:4d3212ec4fecc55b78fcdd",
+        "android_client_info": {
+          "package_name": "com.codingwithmitch.cleannotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160504238952-l7n78rltr2kb3js3opvnoif7kv7uu2vo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHoq_TA4hFzQdINmVRXm6Jb4ywPxFYCQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160504238952-l7n78rltr2kb3js3opvnoif7kv7uu2vo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
