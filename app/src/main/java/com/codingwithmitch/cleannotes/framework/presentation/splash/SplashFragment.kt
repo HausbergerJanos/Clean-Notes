@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import com.codingwithmitch.cleannotes.R
 import com.codingwithmitch.cleannotes.framework.presentation.common.BaseNoteFragment
+import com.codingwithmitch.cleannotes.util.cLog
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 class SplashFragment : BaseNoteFragment(R.layout.fragment_splash) {
 
@@ -13,7 +15,7 @@ class SplashFragment : BaseNoteFragment(R.layout.fragment_splash) {
 
 
     override fun inject() {
-        TODO("prepare dagger")
+
     }
 
 }

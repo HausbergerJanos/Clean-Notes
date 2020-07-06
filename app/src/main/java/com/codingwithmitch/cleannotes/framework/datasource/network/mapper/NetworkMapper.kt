@@ -36,8 +36,8 @@ constructor(
             id = entity.id,
             title = entity.title,
             body = entity.body,
-            updatedAt = dateUtil.convertFirebaseTimestampToStringData(entity.updated_at),
-            createdAt = dateUtil.convertFirebaseTimestampToStringData(entity.created_at)
+            updatedAt = dateUtil.convertFirebaseTimestampToStringData(entity.updatedAt),
+            createdAt = dateUtil.convertFirebaseTimestampToStringData(entity.createdAt)
         )
     }
 
@@ -46,8 +46,8 @@ constructor(
             id = domainModel.id,
             title = domainModel.title,
             body = domainModel.body,
-            updated_at = dateUtil.convertStringDateToFirebaseTimestamp(domainModel.updatedAt),
-            created_at = dateUtil.convertStringDateToFirebaseTimestamp(domainModel.createdAt)
+            updatedAt = dateUtil.convertStringDateToFirebaseTimestamp(domainModel.updatedAt),
+            createdAt = dateUtil.convertStringDateToFirebaseTimestamp(domainModel.createdAt)
         )
     }
 }

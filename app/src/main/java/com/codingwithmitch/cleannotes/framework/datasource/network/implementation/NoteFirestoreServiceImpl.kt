@@ -4,6 +4,7 @@ import com.codingwithmitch.cleannotes.business.domain.model.Note
 import com.codingwithmitch.cleannotes.framework.datasource.network.abstraction.NoteFirestoreService
 import com.codingwithmitch.cleannotes.framework.datasource.network.mapper.NetworkMapper
 import com.codingwithmitch.cleannotes.framework.datasource.network.model.NoteNetworkEntity
+import com.codingwithmitch.cleannotes.util.cLog
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +31,9 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(entity.id)
             .set(entity)
+            .addOnFailureListener {
+                cLog(it.message)
+            }
             .await()
     }
 
@@ -50,7 +54,9 @@ constructor(
                 val documentRef = collectionRef.document(note.id)
                 batch.set(documentRef, entity)
             }
-        }
+        }.addOnFailureListener {
+            cLog(it.message)
+        }.await()
     }
 
     override suspend fun deleteNote(primaryKey: String) {
@@ -60,6 +66,9 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(primaryKey)
             .delete()
+            .addOnFailureListener {
+                cLog(it.message)
+            }
             .await()
     }
 
@@ -71,6 +80,9 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(note.id)
             .set(entity)
+            .addOnFailureListener {
+                cLog(it.message)
+            }
             .await()
     }
 
@@ -90,7 +102,9 @@ constructor(
                 val documentRef = collectionRef.document(note.id)
                 batch.set(documentRef, entity)
             }
-        }
+        }.addOnFailureListener {
+            cLog(it.message)
+        }.await()
     }
 
     override suspend fun deleteDeletedNote(note: Note) {
@@ -100,6 +114,9 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(note.id)
             .delete()
+            .addOnFailureListener {
+                cLog(it.message)
+            }
             .await()
     }
 
@@ -108,11 +125,19 @@ constructor(
             .collection(DELETES_COLLECTION)
             .document(USER_ID)
             .delete()
+            .addOnFailureListener {
+                cLog(it.message)
+            }
+            .await()
 
         fireStore
             .collection(NOTES_COLLECTION)
             .document(USER_ID)
             .delete()
+            .addOnFailureListener {
+                cLog(it.message)
+            }
+            .await()
     }
 
     override suspend fun getDeletedNotes(): List<Note> {
@@ -122,6 +147,9 @@ constructor(
                 .document(USER_ID)
                 .collection(NOTES_COLLECTION)
                 .get()
+                .addOnFailureListener {
+                    cLog(it.message)
+                }
                 .await()
                 .toObjects(NoteNetworkEntity::class.java)
         )
@@ -134,6 +162,9 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(note.id)
             .get()
+            .addOnFailureListener {
+                cLog(it.message)
+            }
             .await()
             .toObject(NoteNetworkEntity::class.java)?.let {
                 networkMapper.mapFromEntity(it)
@@ -147,6 +178,9 @@ constructor(
                 .document(USER_ID)
                 .collection(NOTES_COLLECTION)
                 .get()
+                .addOnFailureListener {
+                    cLog(it.message)
+                }
                 .await()
                 .toObjects(NoteNetworkEntity::class.java)
         )
