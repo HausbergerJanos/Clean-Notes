@@ -1,11 +1,4 @@
-import dependencies.AnnotationProcessing
-import dependencies.SupportDependencies
-import dependencies.TestDependencies
-import dependencies.Versions
-import dependencies.Application
-import dependencies.Dependencies
-import dependencies.Java
-import dependencies.AndroidTestDependencies
+import dependencies.*
 
 apply plugin: 'com.android.application'
 
@@ -14,8 +7,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
-
-apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'com.google.firebase.crashlytics'
 
@@ -34,15 +25,17 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            manifestPlaceholders = [enableCrashReporting:"false"]
         }
         release {
             minifyEnabled false
+            manifestPlaceholders = [enableCrashReporting:"true"]
         }
     }
 
     compileOptions {
-        sourceCompatibility = Java.java_version
-        targetCompatibility = Java.java_version
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -50,55 +43,70 @@ android {
     }
 
     sourceSets {
-        test.resources.srcDirs += "src/test/res"
+        test.resources.srcDirs += 'src/test/res'
     }
 
-    // remove need for apply plugin: 'de.mannodermaus.android-junit5'
     testOptions {
         unitTests.all {
             useJUnitPlatform()
         }
     }
+
 }
 
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // Kotlin
     implementation Dependencies.kotlin_standard_library
     implementation Dependencies.kotlin_reflect
     implementation Dependencies.ktx
-
-    // Dependencies
+    implementation Dependencies.navigation_runtime
+    implementation Dependencies.navigation_ui
+    implementation Dependencies.navigation_fragment
+    implementation Dependencies.navigation_dynamic
+    implementation Dependencies.material_dialogs
+    implementation Dependencies.material_dialogs_input
+    implementation Dependencies.play_core
+    implementation Dependencies.leak_canary
     implementation Dependencies.dagger
-    implementation Dependencies.firebase_analytics
-    implementation Dependencies.firebase_auth
-    implementation Dependencies.firebase_crashlytics
-    implementation Dependencies.firebase_firestore
-    implementation Dependencies.kotlin_coroutines
-    implementation Dependencies.kotlin_coroutines_android
-    implementation Dependencies.kotlin_coroutines_play_services
+    implementation Dependencies.room_runtime
+    implementation Dependencies.room_ktx
+    implementation Dependencies.markdown_processor
     implementation Dependencies.retrofit
     implementation Dependencies.retrofit_gson
-    implementation Dependencies.room_ktx
-    implementation Dependencies.room_runtime
+    implementation Dependencies.firebase_firestore
+    implementation Dependencies.firebase_auth
+    implementation Dependencies.kotlin_coroutines_play_services
+    implementation Dependencies.firebase_analytics
+    implementation Dependencies.firebase_crashlytics
+    implementation AndroidTestDependencies.idling_resource
 
-    // Annotation Processing
-    kapt AnnotationProcessing.dagger_compiler
-    kapt AnnotationProcessing.room_compiler
-
-    // Support
+    implementation SupportDependencies.swipe_refresh_layout
     implementation SupportDependencies.appcompat
     implementation SupportDependencies.constraintlayout
     implementation SupportDependencies.material_design
-    implementation SupportDependencies.swipe_refresh_layout
 
-    // Unit tests
+    kapt AnnotationProcessing.room_compiler
+    kapt AnnotationProcessing.dagger_compiler
+
     testImplementation TestDependencies.mockk
     testImplementation TestDependencies.jupiter_api
     testImplementation TestDependencies.jupiter_params
     testImplementation TestDependencies.junit4
     testRuntimeOnly TestDependencies.jupiter_engine
-    testImplementation Dependencies.retrofit_gson
+
+    androidTestImplementation AndroidTestDependencies.kotlin_test
+    androidTestImplementation AndroidTestDependencies.coroutines_test
+    androidTestImplementation AndroidTestDependencies.espresso_core
+    androidTestImplementation AndroidTestDependencies.espresso_contrib
+    androidTestImplementation AndroidTestDependencies.idling_resource
+    androidTestImplementation AndroidTestDependencies.mockk_android
+    androidTestImplementation AndroidTestDependencies.test_runner
+    androidTestImplementation AndroidTestDependencies.test_rules
+    androidTestImplementation AndroidTestDependencies.text_core_ktx
+    androidTestImplementation AndroidTestDependencies.navigation_testing
+    debugImplementation AndroidTestDependencies.fragment_testing
+    kaptAndroidTest  AnnotationProcessing.dagger_compiler
+
 }
+apply plugin: 'com.google.gms.google-services'

@@ -16,7 +16,7 @@ import javax.inject.Singleton
 interface AppComponent {
 
     @Component.Factory
-    interface Factorí {
+    interface Factory {
 
         fun create(@BindsInstance app: BaseApplication): AppComponent
     }
