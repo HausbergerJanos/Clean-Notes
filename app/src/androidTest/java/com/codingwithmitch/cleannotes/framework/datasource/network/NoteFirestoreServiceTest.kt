@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.codingwithmitch.cleannotes.business.domain.model.NoteFactory
 import com.codingwithmitch.cleannotes.di.TestAppComponent
+import com.codingwithmitch.cleannotes.framework.BaseTest
 import com.codingwithmitch.cleannotes.framework.datasource.network.abstraction.NoteFirestoreService
 import com.codingwithmitch.cleannotes.framework.datasource.network.implementation.NoteFirestoreServiceImpl
 import com.codingwithmitch.cleannotes.framework.datasource.network.mapper.NetworkMapper
@@ -21,14 +22,10 @@ import java.util.*
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-class NoteFirestoreServiceTests{
+class NoteFirestoreServiceTests : BaseTest() {
 
     // system in test
     private lateinit var noteFirestoreService: NoteFirestoreService
-
-    // dependencies
-    val application: TestBaseApplication
-            = ApplicationProvider.getApplicationContext<Context>() as TestBaseApplication
 
     @Inject
     lateinit var firestore: FirebaseFirestore
@@ -43,8 +40,7 @@ class NoteFirestoreServiceTests{
     lateinit var networkMapper: NetworkMapper
 
     init {
-        (application.appComponent as TestAppComponent)
-            .inject(this)
+        injectTest()
         signIn()
     }
 
@@ -82,5 +78,9 @@ class NoteFirestoreServiceTests{
     companion object{
         const val EMAIL = "test@user.com"
         const val PASSWORD = "Password1234"
+    }
+
+    override fun injectTest() {
+        (application.appComponent as TestAppComponent).inject(this)
     }
 }
