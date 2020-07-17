@@ -43,7 +43,9 @@ constructor(
         filterAndOrder: String,
         page: Int
     ): List<Note> {
-        TODO("Check filterAndOrder and make query")
+        return noteDaoService.returnOrderedQuery(
+            query, filterAndOrder, page
+        )
     }
 
     override suspend fun searchNoteById(id: String): Note? {

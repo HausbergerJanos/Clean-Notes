@@ -1,5 +1,6 @@
 package com.codingwithmitch.cleannotes.di
 
+import com.codingwithmitch.cleannotes.framework.datasource.cache.NoteDaoServiceTest
 import com.codingwithmitch.cleannotes.framework.datasource.network.NoteFirestoreServiceTests
 import com.codingwithmitch.cleannotes.framework.presentation.TestBaseApplication
 import dagger.BindsInstance
@@ -22,4 +23,6 @@ interface TestAppComponent : AppComponent {
     }
 
     fun inject(noteFirestoreServiceTests: NoteFirestoreServiceTests)
+
+    fun inject(noteDaoServiceTest: NoteDaoServiceTest)
 }
