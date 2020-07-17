@@ -53,7 +53,8 @@ constructor(
     override suspend fun updateNote(
         primaryKey: String,
         newTitle: String,
-        newBody: String?
+        newBody: String?,
+        timeStamp: String?
     ): Int {
         if (primaryKey == FORCE_UPDATE_NOTE_EXCEPTION) {
             throw Exception("Something went wrong updating the note.")
@@ -62,7 +63,7 @@ constructor(
             id = primaryKey,
             title = newTitle,
             body = newBody ?: "",
-            updatedAt = dateUtil.getCurrentTimestamp(),
+            updatedAt = timeStamp?: dateUtil.getCurrentTimestamp(),
             createdAt = notesData[primaryKey]?.createdAt ?: dateUtil.getCurrentTimestamp()
         )
         return notesData[primaryKey]?.let {

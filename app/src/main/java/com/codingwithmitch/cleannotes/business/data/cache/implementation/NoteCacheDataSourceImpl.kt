@@ -28,9 +28,10 @@ constructor(
     override suspend fun updateNote(
         primaryKey: String,
         newTitle: String,
-        newBody: String?
+        newBody: String?,
+        timeStamp: String?
     ): Int {
-        return noteDaoService.updateNote(primaryKey, newTitle, newBody)
+        return noteDaoService.updateNote(primaryKey, newTitle, newBody, timeStamp)
     }
 
     override suspend fun getAllNotes(): List<Note> {

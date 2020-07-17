@@ -20,9 +20,10 @@ class SyncNotes(
 ) {
 
     suspend fun syncNotes() {
-
         val cachedNotesList = getCachedNotes()
-        syncNetworkNotesWithCachedNotes(ArrayList(cachedNotesList))
+        val networkNotesList = getNetworkNotes()
+
+        syncNetworkNotesWithCachedNotes(ArrayList(cachedNotesList), networkNotesList)
     }
 
     private suspend fun getCachedNotes(): List<Note> {
@@ -47,15 +48,7 @@ class SyncNotes(
         return response?.data ?: ArrayList()
     }
 
-    // get all notes from network
-    // if they do not exist in cache, insert them
-    // if they do exist in cache, make sure they are up to date
-    // while looping, remove notes from the cachedNotes list. If any remain, it means they
-    // should be in the network but aren't. So insert them.
-    private suspend fun syncNetworkNotesWithCachedNotes(
-        cachedNotes: ArrayList<Note>
-    ) = withContext(IO) {
-
+    private suspend fun getNetworkNotes(): List<Note> {
         val networkResult = safeApiCall(IO) {
             noteNetworkDataSource.getAllNotes()
         }
@@ -73,19 +66,25 @@ class SyncNotes(
             }
         }.getResult()
 
-        val noteList = response?.data ?: ArrayList()
+        return response?.data ?: ArrayList()
+    }
 
-        val job = launch {
-            for (note in noteList) {
-                noteCacheDataSource.searchNoteById(note.id)?.let { cachedNote ->
-                    cachedNotes.remove(cachedNote)
-                    checkIfCachedNoteRequiresUpdate(cachedNote, note)
-                } ?: noteCacheDataSource.insertNote(note)
-            }
+    // get all notes from network
+    // if they do not exist in cache, insert them
+    // if they do exist in cache, make sure they are up to date
+    // while looping, remove notes from the cachedNotes list. If any remain, it means they
+    // should be in the network but aren't. So insert them.
+    private suspend fun syncNetworkNotesWithCachedNotes(
+        cachedNotes: ArrayList<Note>,
+        networkNotes: List<Note>
+    ) = withContext(IO) {
+
+        for (note in networkNotes) {
+            noteCacheDataSource.searchNoteById(note.id)?.let { cachedNote ->
+                cachedNotes.remove(cachedNote)
+                checkIfCachedNoteRequiresUpdate(cachedNote, note)
+            } ?: noteCacheDataSource.insertNote(note)
         }
-
-        // wait
-        job.join()
 
         // insert remaining into network
         for (cachedNote in cachedNotes) {
@@ -114,10 +113,11 @@ class SyncNotes(
                 noteCacheDataSource.updateNote(
                     primaryKey = networkNote.id,
                     newTitle = networkNote.title,
-                    newBody = networkNote.body
+                    newBody = networkNote.body,
+                    timeStamp = networkNote.updatedAt
                 )
             }
-        } else {
+        } else if (networkUpdatedAt < cacheUpdatedAt) {
             // update network (cache has newest data)
             safeApiCall(IO) {
                 noteNetworkDataSource.insertOrUpdateNote(cachedNote)

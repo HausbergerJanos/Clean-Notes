@@ -4,11 +4,12 @@ import com.codingwithmitch.cleannotes.business.data.cache.abstraction.NoteCacheD
 import com.codingwithmitch.cleannotes.business.data.network.abstraction.NoteNetworkDataSource
 import com.codingwithmitch.cleannotes.business.domain.model.Note
 import com.codingwithmitch.cleannotes.business.domain.model.NoteFactory
+import com.codingwithmitch.cleannotes.business.domain.util.DateUtil
 import com.codingwithmitch.cleannotes.di.DependencyContainer
 import com.codingwithmitch.cleannotes.framework.datasource.cache.database.ORDER_BY_ASC_DATE_UPDATED
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.*
 import kotlin.collections.ArrayList
@@ -42,6 +43,7 @@ class SyncNotesTest {
     private val noteCacheDataSource: NoteCacheDataSource
     private val noteNetworkDataSource: NoteNetworkDataSource
     private val noteFactory: NoteFactory
+    private val dateUtil: DateUtil
 
     init {
         dependencyContainer = DependencyContainer()
@@ -53,7 +55,76 @@ class SyncNotesTest {
             noteCacheDataSource = noteCacheDataSource,
             noteNetworkDataSource = noteNetworkDataSource
         )
+        dateUtil = dependencyContainer.dateUtil
     }
+
+    @Test
+    fun doSuccessiveUpdatesOccur() = runBlocking {
+
+        // update a single note with new timestamp
+        val newDate = dateUtil.getCurrentTimestamp()
+        val updatedNote = Note(
+            id = noteNetworkDataSource.getAllNotes()[0].id,
+            title = noteNetworkDataSource.getAllNotes()[0].title,
+            body = noteNetworkDataSource.getAllNotes()[0].body,
+            createdAt = noteNetworkDataSource.getAllNotes()[0].createdAt,
+            updatedAt = newDate
+        )
+        noteNetworkDataSource.insertOrUpdateNote(updatedNote)
+
+        syncNotes.syncNotes()
+
+        delay(1001)
+
+        // simulate launch app again
+        syncNotes.syncNotes()
+
+        // confirm the date was not updated a second time
+        val notes = noteNetworkDataSource.getAllNotes()
+        for(note in notes){
+            if(note.id == updatedNote.id){
+                assertTrue { note.updatedAt == newDate }
+            }
+        }
+    }
+
+
+    @Test
+    fun checkUpdatedAtDates() = runBlocking {
+
+        // update a single note with new timestamp
+        val newDate = dateUtil.getCurrentTimestamp()
+        val updatedNote = Note(
+            id = noteNetworkDataSource.getAllNotes()[0].id,
+            title = noteNetworkDataSource.getAllNotes()[0].title,
+            body = noteNetworkDataSource.getAllNotes()[0].body,
+            createdAt = noteNetworkDataSource.getAllNotes()[0].createdAt,
+            updatedAt = newDate
+        )
+        noteNetworkDataSource.insertOrUpdateNote(updatedNote)
+
+//        for(note in noteNetworkDataSource.getAllNotes()){
+//            println("date: ${note.updatedAt}")
+//        }
+//        println("BREAK")
+
+        syncNotes.syncNotes()
+
+        // confirm only a single 'updated_at' date was updated
+        val notes = noteNetworkDataSource.getAllNotes()
+        for(note in notes){
+            noteCacheDataSource.searchNoteById(note.id)?.let { n ->
+                println("date: ${n.updatedAt}")
+                if(n.id == updatedNote.id){
+                    assertTrue { n.updatedAt == newDate }
+                }
+                else{
+                    assertFalse { n.updatedAt == newDate }
+                }
+            }
+        }
+    }
+
 
     @Test
     fun insertNetworkNotesIntoCache() = runBlocking {
