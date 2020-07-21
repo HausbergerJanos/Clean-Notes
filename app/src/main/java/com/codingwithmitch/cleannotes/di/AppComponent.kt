@@ -2,6 +2,8 @@ package com.codingwithmitch.cleannotes.di
 
 import com.codingwithmitch.cleannotes.framework.presentation.BaseApplication
 import com.codingwithmitch.cleannotes.framework.presentation.MainActivity
+import com.codingwithmitch.cleannotes.framework.presentation.notedetail.NoteDetailFragment
+import com.codingwithmitch.cleannotes.framework.presentation.notelist.NoteListFragment
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,4 +30,8 @@ interface AppComponent {
     }
 
     fun inject(mainActivity: MainActivity)
+
+    fun inject(noteListFragment: NoteListFragment)
+
+    fun inject(noteDetailFragment: NoteDetailFragment)
 }
