@@ -1,11 +1,11 @@
 package com.codingwithmitch.cleannotes.business.interactors.notelist
 
 import com.codingwithmitch.cleannotes.business.interactors.common.DeleteNote
-import com.codingwithmitch.cleannotes.framework.presentation.notedetail.state.NoteDetailViewState
+import com.codingwithmitch.cleannotes.framework.presentation.notelist.state.NoteListViewState
 
 class NoteListInteractors(
     val insertNewNote: InsertNewNote,
-    val deleteNote: DeleteNote<NoteDetailViewState>,
+    val deleteNote: DeleteNote<NoteListViewState>,
     val searchNotes: SearchNotes,
     val getNumNotes: GetNumNotes,
     val restoreDeletedNote: RestoreDeletedNote,

@@ -18,7 +18,7 @@ class InsertNewNote(
     private val noteCacheDataSource: NoteCacheDataSource,
     private val noteNetworkDataSource: NoteNetworkDataSource,
     private val noteFactory: NoteFactory
-){
+) {
 
     fun insertNewNote(
         id: String? = null,
@@ -30,16 +30,16 @@ class InsertNewNote(
             id = id ?: UUID.randomUUID().toString(),
             title = title
         )
-        val cacheResult = safeCacheCall(IO){
+        val cacheResult = safeCacheCall(IO) {
             noteCacheDataSource.insertNote(newNote)
         }
 
-        val cacheResponse = object: CacheResponseHandler<NoteListViewState, Long>(
+        val cacheResponse = object : CacheResponseHandler<NoteListViewState, Long>(
             response = cacheResult,
             stateEvent = stateEvent
-        ){
+        ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<NoteListViewState>? {
-                return if(resultObj > 0){
+                return if (resultObj > 0) {
                     val viewState =
                         NoteListViewState(
                             newNote = newNote
@@ -53,8 +53,7 @@ class InsertNewNote(
                         data = viewState,
                         stateEvent = stateEvent
                     )
-                }
-                else{
+                } else {
                     DataState.data(
                         response = Response(
                             message = INSERT_NOTE_FAILED,
@@ -73,16 +72,16 @@ class InsertNewNote(
         updateNetwork(cacheResponse?.stateMessage?.response?.message, newNote)
     }
 
-    private suspend fun updateNetwork(cacheResponse: String?, newNote: Note ){
-        if(cacheResponse.equals(INSERT_NOTE_SUCCESS)){
+    private suspend fun updateNetwork(cacheResponse: String?, newNote: Note) {
+        if (cacheResponse.equals(INSERT_NOTE_SUCCESS)) {
 
-            safeApiCall(IO){
+            safeApiCall(IO) {
                 noteNetworkDataSource.insertOrUpdateNote(newNote)
             }
         }
     }
 
-    companion object{
+    companion object {
         val INSERT_NOTE_SUCCESS = "Successfully inserted new note."
         val INSERT_NOTE_FAILED = "Failed to insert new note."
     }
