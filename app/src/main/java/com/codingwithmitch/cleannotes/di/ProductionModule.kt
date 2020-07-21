@@ -1,7 +1,10 @@
 package com.codingwithmitch.cleannotes.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.codingwithmitch.cleannotes.framework.datasource.cache.database.NoteDatabase
+import com.codingwithmitch.cleannotes.framework.datasource.preferences.PreferenceKeys
 import com.codingwithmitch.cleannotes.framework.presentation.BaseApplication
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -16,7 +19,6 @@ import javax.inject.Singleton
  */
 @Module
 object ProductionModule {
-
 
     @JvmStatic
     @Singleton
@@ -35,5 +37,15 @@ object ProductionModule {
         return FirebaseFirestore.getInstance()
     }
 
-
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(
+        application: BaseApplication
+    ): SharedPreferences {
+        return application.getSharedPreferences(
+            PreferenceKeys.NOTE_PREFERENCES,
+            Context.MODE_PRIVATE
+        )
+    }
 }

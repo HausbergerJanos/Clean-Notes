@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 abstract class BaseNoteFragment
 constructor(
     private @LayoutRes val layoutRes: Int
-): Fragment() {
+) : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +27,6 @@ constructor(
         inject()
         super.onAttach(context)
     }
-
 }
 
 

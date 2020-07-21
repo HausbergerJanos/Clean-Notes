@@ -32,7 +32,6 @@ import javax.inject.Singleton
 @Module
 object AppModule {
 
-
     // https://developer.android.com/reference/java/text/SimpleDateFormat.html?hl=pt-br
     @JvmStatic
     @Singleton
@@ -200,7 +199,4 @@ object AppModule {
             DeleteMultipleNotes(noteCacheDataSource, noteNetworkDataSource)
         )
     }
-
-
-
 }

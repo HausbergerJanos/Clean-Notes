@@ -17,38 +17,38 @@ class StateEventManager {
     val shouldDisplayProgressBar: LiveData<Boolean>
         get() = _shouldDisplayProgressBar
 
-    fun getActiveJobNames(): MutableSet<String>{
+    fun getActiveJobNames(): MutableSet<String> {
         return activeStateEvents.keys
     }
 
-    fun clearActiveStateEventCounter(){
+    fun clearActiveStateEventCounter() {
         activeStateEvents.clear()
         syncNumActiveStateEvents()
     }
 
-    fun addStateEvent(stateEvent: StateEvent){
-        activeStateEvents.put(stateEvent.eventName(), stateEvent)
+    fun addStateEvent(stateEvent: StateEvent) {
+        activeStateEvents[stateEvent.eventName()] = stateEvent
         syncNumActiveStateEvents()
     }
 
-    fun removeStateEvent(stateEvent: StateEvent?){
+    fun removeStateEvent(stateEvent: StateEvent?) {
         activeStateEvents.remove(stateEvent?.eventName())
         syncNumActiveStateEvents()
     }
 
-    fun isStateEventActive(stateEvent: StateEvent): Boolean{
-        for(eventName in activeStateEvents.keys){
-            if(stateEvent.eventName().equals(eventName)){
+    fun isStateEventActive(stateEvent: StateEvent): Boolean {
+        for (eventName in activeStateEvents.keys) {
+            if (stateEvent.eventName() == eventName) {
                 return true
             }
         }
         return false
     }
 
-    private fun syncNumActiveStateEvents(){
+    private fun syncNumActiveStateEvents() {
         var shouldDisplayProgressBar = false
-        for(stateEvent in activeStateEvents.values){
-            if(stateEvent.shouldDisplayProgressBar()){
+        for (stateEvent in activeStateEvents.values) {
+            if (stateEvent.shouldDisplayProgressBar()) {
                 shouldDisplayProgressBar = true
             }
         }
