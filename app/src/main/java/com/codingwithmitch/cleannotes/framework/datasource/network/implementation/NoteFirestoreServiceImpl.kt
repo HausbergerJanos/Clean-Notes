@@ -190,7 +190,7 @@ constructor(
         const val NOTES_COLLECTION = "notes"
         const val USERS_COLLECTION = "users"
         const val DELETES_COLLECTION = "deletes"
-        const val USER_ID = "f1GHm3IFbwZYiH7RMeYgaiNbaAr1" // hardcoded for single user
+        const val USER_ID = "cSyMdPKanTewqrPY3SrkoiOyzQm1" // hardcoded for single user
         const val EMAIL = "hausberger.janos@gmail.com"
     }
 }

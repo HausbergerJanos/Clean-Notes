@@ -134,9 +134,7 @@ constructor(
     private fun subscribeObservers() {
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-
             if (viewState != null) {
-
                 viewState.note?.let { note ->
                     setNoteTitle(note.title)
                     setNoteBody(note.body)
@@ -149,9 +147,7 @@ constructor(
         })
 
         viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->
-
             stateMessage?.response?.let { response ->
-
                 when (response.message) {
 
                     UPDATE_NOTE_SUCCESS -> {
@@ -190,11 +186,9 @@ constructor(
                     }
                 }
             }
-
         })
 
         viewModel.collapsingToolbarState.observe(viewLifecycleOwner, Observer { state ->
-
             when (state) {
 
                 is Expanded -> {
@@ -208,7 +202,6 @@ constructor(
         })
 
         viewModel.noteTitleInteractionState.observe(viewLifecycleOwner, Observer { state ->
-
             when (state) {
 
                 is EditState -> {
@@ -225,7 +218,6 @@ constructor(
         })
 
         viewModel.noteBodyInteractionState.observe(viewLifecycleOwner, Observer { state ->
-
             when (state) {
 
                 is EditState -> {
@@ -298,7 +290,6 @@ constructor(
                 viewModel.setNote(selectedNote)
             } ?: onErrorRetrievingNoteFromPreviousFragment()
         }
-
     }
 
     private fun restoreInstanceState() {
